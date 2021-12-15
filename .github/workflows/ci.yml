@@ -31,7 +31,7 @@ jobs:
         uses: hecrj/setup-rust-action@v1
         with:
           rust-version: ${{ matrix.rust }}
-      - name: run custom provider example
+      - name: run test's
         run: cargo test --package env-watcher --lib test
       - name: exmaple snapshot
         run: cargo run --package watcher --example change_hanlder

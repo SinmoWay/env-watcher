@@ -26,7 +26,6 @@ pub fn create_all_subscriber() {
     let data = env_watcher.subscribe(subscribe).unwrap();
 
     let current_data = data.0;
-    println!("{:?}", &current_data);
 
     assert_eq!(
         Some(TEST_VALUE),
@@ -234,7 +233,6 @@ pub fn snapshot_changes() {
     let data = env_watcher.subscribe_snapshot(subscribe).unwrap();
 
     let w_data = data.data();
-    println!("{:?}", &w_data);
 
     assert_eq!(Some(TEST_VALUE), w_data.get("my.test.host").map(|v| &**v));
     assert_eq!(Some(TEST_VALUE), w_data.get("my.test.port").map(|v| &**v));

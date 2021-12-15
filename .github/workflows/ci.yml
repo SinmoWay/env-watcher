@@ -1,0 +1,39 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build: [stable, nightly, macos, win-msvc]
+        include:
+          - build: stable
+            os: ubuntu-18.04
+            rust: stable
+          - build: nightly
+            os: ubuntu-18.04
+            rust: nightly
+          - build: macos
+            os: macOS-latest
+            rust: stable
+          - build: win-msvc
+            os: windows-2019
+            rust: stable
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Rust
+        uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+      - name: run custom provider example
+        run: cargo test --package env-watcher --lib test
+      - name: exmaple snapshot
+        run: cargo run --package watcher --example change_hanlder
+      - name: exmaple change handler
+        run: cargo run --package watcher --example snapshot

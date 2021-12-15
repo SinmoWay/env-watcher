@@ -1,0 +1,19 @@
+[package]
+name = "env-watcher"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+crossbeam-channel = "0.5.1"
+thiserror = "1.0.30"
+spin_sleep = "1.0.0"
+regex = "1.5.4"
+diff-struct = "0.3.1"
+log = "0.4.14"
+state = { version = "0.5.2", optional = true }
+
+[features]
+default = ["derive"]
+derive = ["state"]

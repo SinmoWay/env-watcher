@@ -229,7 +229,7 @@ pub fn snapshot_changes() {
     fill_envs(vec_envs.clone());
 
     let env_watcher = EnvironmentWatcher::new(Duration::from_secs(5));
-    spin_sleep::sleep(Duration::from_secs(2));
+    spin_sleep::sleep(Duration::from_secs(10));
     let data = env_watcher.subscribe_snapshot(subscribe).unwrap();
 
     let w_data = data.data();

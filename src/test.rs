@@ -234,9 +234,9 @@ pub fn snapshot_changes() {
 
     let w_data = data.data();
 
-    assert_eq!(Some(TEST_VALUE), w_data.get("my.test.host").map(|v| &**v));
-    assert_eq!(Some(TEST_VALUE), w_data.get("my.test.port").map(|v| &**v));
-    assert_eq!(Some(TEST_VALUE), w_data.get("my.test.type").map(|v| &**v));
+    assert_eq!(Some(TEST_VALUE), w_data.get("my.test44.host").map(|v| &**v));
+    assert_eq!(Some(TEST_VALUE), w_data.get("my.test44.port").map(|v| &**v));
+    assert_eq!(Some(TEST_VALUE), w_data.get("my.test44.type").map(|v| &**v));
 
     std::env::remove_var("my.test44.host");
     std::env::set_var("my.test44.port", "2012");

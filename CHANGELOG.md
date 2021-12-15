@@ -1,3 +1,5 @@
 # Changelog
 * 0.1.0 - initial
-  * Add base implementation for watching envs.
+  * Added base implementation for watching envs.
+  * Added events support: `Edit`,` Delete`.
+  * Added snapshot (with default impl)

@@ -11,14 +11,6 @@ fn fill_envs(envs: Vec<String>, val: &'static str) {
     });
 }
 
-fn print_all_data_banner() {
-    println!();
-    println!("###################################################");
-    println!("################# ALL DATA IN ENV #################");
-    println!("###################################################");
-    println!();
-}
-
 fn print_after() {
     println!();
     println!("###################################################");
@@ -36,8 +28,6 @@ fn print_before() {
 }
 
 pub fn main() -> Result<(), Error> {
-    let sub_all = Subscribe::All;
-
     let sub_envs_key = vec!["test.bey".to_string(), "test.wow".to_string()];
     fill_envs(sub_envs_key.clone(), TEST_VALUE);
 
@@ -55,12 +45,6 @@ pub fn main() -> Result<(), Error> {
 
     let env_core = EnvironmentWatcher::new(Duration::from_secs(3));
     sleep(Duration::from_secs(1));
-
-    let all = env_core.subscribe_snapshot(sub_all)?;
-
-    print_all_data_banner();
-    println!("{:?}", all.data());
-    println!();
 
     let only_envs = env_core.subscribe_snapshot(sub_envs)?;
 

@@ -90,10 +90,10 @@ impl EnvironmentData {
             let mut snapshot = snapshot.lock().unwrap();
             match data {
                 ChangeState::Edit(k, v) => {
-                    snapshot.insert(k.clone(), v.clone()).unwrap();
+                    snapshot.insert(k.clone(), v.clone());
                 }
                 ChangeState::Delete(k) => {
-                    snapshot.remove(&*k).unwrap();
+                    snapshot.remove(&*k);
                 }
             };
         });

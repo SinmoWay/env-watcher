@@ -1,4 +1,4 @@
-[![ci](https://github.com/SinmoWay/env-watcher/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SinmoWay/env-watcher/actions/workflows/ci.yml)
+[![ci](https://github.com/SinmoWay/env-watcher/actions/workflows/ci.yml/badge.svg)](https://github.com/SinmoWay/env-watcher/actions/workflows/ci.yml)
 
 # A simple library for viewing environment variables with a subscription to change any variables.
 Implementation of viewing variables in real time. In case of changing variables, get a snapshot of data or a change event (Delete/Edit).

@@ -2,9 +2,13 @@
 name = "env-watcher"
 version = "0.1.0"
 edition = "2021"
-exclude = [
-    "examples/*",
-    ".github/*",
+include = [
+    "/benches/*",
+    "/examples/*",
+    "/src/*",
+    "/Cargo.toml",
+    "/LICENSE",
+    "/README.md",
 ]
 
 license = "MIT"

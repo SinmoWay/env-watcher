@@ -146,7 +146,7 @@ impl EnvironmentWatcher {
     }
 
     /// Subscribe to the keys and get a snapshot of the data
-    fn subscribe_snapshot(&self, subscribe: Subscribe) -> Result<EnvironmentData> {
+    pub fn subscribe_snapshot(&self, subscribe: Subscribe) -> Result<EnvironmentData> {
         let sub = self.subscribe(subscribe)?;
         let data = EnvironmentData {
             data: Arc::new(Mutex::new(sub.0)),

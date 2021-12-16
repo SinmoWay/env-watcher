@@ -2,6 +2,17 @@
 name = "env-watcher"
 version = "0.1.0"
 edition = "2021"
+exclude = [
+    "examples/*",
+    ".github/*",
+]
+
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/SinmoWay/env-watcher"
+keywords = ["env", "environment"]
+categories = ["config", "os"]
+description = "A simple library for viewing environment variables with a subscription to change any variables."
 
 [dependencies]
 crossbeam-channel = "0.5.1"

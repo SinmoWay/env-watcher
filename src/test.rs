@@ -22,7 +22,6 @@ pub fn create_all_subscriber() {
     fill_envs(vec_envs.clone());
 
     let env_watcher = EnvironmentWatcher::new(Duration::from_secs(5));
-    spin_sleep::sleep(Duration::from_secs(2));
     let data = env_watcher.subscribe(subscribe).unwrap();
 
     let current_data = data.0;
@@ -90,7 +89,6 @@ pub fn create_envs_subscriber() {
     let subscribe = Subscribe::Envs(vec_envs.clone());
 
     let env_watcher = EnvironmentWatcher::new(Duration::from_secs(5));
-    spin_sleep::sleep(Duration::from_secs(2));
     let data = env_watcher.subscribe(subscribe).unwrap();
 
     let current_data = data.0;
@@ -160,7 +158,6 @@ pub fn create_pattern_envs_subscriber() {
     let subscriber = Subscribe::PatternEnvs(vec!["my.client.*".to_string()]);
 
     let env_watcher = EnvironmentWatcher::new(Duration::from_secs(5));
-    spin_sleep::sleep(Duration::from_secs(2));
     let data = env_watcher.subscribe(subscriber).unwrap();
 
     let current_data = data.0;
@@ -228,8 +225,7 @@ pub fn snapshot_changes() {
         .collect::<Vec<String>>();
     fill_envs(vec_envs.clone());
 
-    let env_watcher = EnvironmentWatcher::new(Duration::from_secs(5));
-    spin_sleep::sleep(Duration::from_secs(10));
+    let env_watcher = EnvironmentWatcher::new(Duration::from_secs(1));
     let data = env_watcher.subscribe_snapshot(subscribe).unwrap();
 
     let w_data = data.data();
@@ -242,10 +238,9 @@ pub fn snapshot_changes() {
     std::env::set_var("my.test44.port", "2012");
     std::env::set_var("my.test44.type", "78MB");
 
-    spin_sleep::sleep(Duration::from_secs(6));
+    spin_sleep::sleep(Duration::from_secs(3));
 
     let data = data.data();
-    println!("{:?}", &data);
 
     assert_eq!(Some("2012"), data.get("my.test44.port").map(|v| &**v));
     assert_eq!(Some("78MB"), data.get("my.test44.type").map(|v| &**v));
@@ -291,7 +286,6 @@ pub fn test_init_with_sub() -> crate::Result<()> {
     set_var("test.west.key2", "hello world2");
     init_env_watch!(Duration::from_millis(500))?;
 
-    sleep(Duration::from_millis(600));
     let sub = Subscribe::Envs(vec!["test.west.key".to_string(), "test.west.key2".to_string()]);
     let (data, rx) = sub_env!(sub.clone())?;
     let snap = sub_env_snapshot!(sub)?;

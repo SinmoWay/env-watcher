@@ -4,3 +4,5 @@
   * Added events support: `Edit`,` Delete`.
   * Added snapshot (with default impl)
   * Added test's
+  * Added examples
+  * Added log for loop and event's

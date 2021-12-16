@@ -1,11 +1,10 @@
 #[forbid(unsafe_code)]
 #[forbid(unused_imports)]
 #[forbid(missing_docs)]
-
 #[cfg(test)]
 mod test;
 #[cfg(feature = "derive")]
-mod derive;
+pub mod derive;
 
 use crossbeam_channel::{Receiver, Sender};
 use diff::Diff;
@@ -15,6 +14,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use thiserror::Error;
 use spin_sleep::sleep;
+use log::{info, debug, trace};
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -29,11 +29,11 @@ pub enum Error {
     DoubleInitialWatcher,
 
     #[error("In current watcher exists subscribers.")]
-    ReinitializedWithSubscribers
+    ReinitializedWithSubscribers,
 }
 
 /// Changing the current state for a subscriber
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum ChangeState {
     /// Add or change state
     Edit(String, String),
@@ -118,22 +118,35 @@ impl EnvironmentWatcher {
     /// Create a new instance to track the state
     /// Interval - how often we request data and update the state (if required)
     pub fn new(interval: Duration) -> Self {
+        info!("Starting env watcher with interval {:?}", &interval);
         let env_state = Self {
             state: Arc::new(Mutex::new(Default::default())),
             senders: Arc::new(Mutex::new(Default::default())),
             interval,
         };
+        env_state.preload();
         env_state.run();
         env_state
     }
 
+    /// Preload the environment
+    fn preload(&self) {
+        let mut data = self.state.lock().unwrap();
+        std::env::vars().for_each(|kv| {
+            data.insert(kv.0, kv.1);
+        });
+        trace!("Preload environment map:\n{:?}", &data)
+    }
+
     /// Subscribers size. (only `Subscribe`)
     pub fn size(&self) -> usize {
-        self.senders.lock().unwrap().len()
+        let size = self.senders.lock().unwrap().len();
+        debug!("Current subscribers size: {:?}", &size);
+        size
     }
 
     /// Subscribe to the keys and get a snapshot of the data
-    pub fn subscribe_snapshot(&self, subscribe: Subscribe) -> Result<EnvironmentData> {
+    fn subscribe_snapshot(&self, subscribe: Subscribe) -> Result<EnvironmentData> {
         let sub = self.subscribe(subscribe)?;
         let data = EnvironmentData {
             data: Arc::new(Mutex::new(sub.0)),
@@ -148,6 +161,7 @@ impl EnvironmentWatcher {
         &self,
         subscribe: Subscribe,
     ) -> Result<(HashMap<String, String>, Receiver<ChangeState>)> {
+        debug!("Subscribe by {:?}", &subscribe);
         let (tx, rx) = crossbeam_channel::unbounded::<ChangeState>();
 
         let mut data = {
@@ -257,6 +271,7 @@ impl EnvironmentWatcher {
                     }
 
                     if !changes.is_empty() {
+                        debug!("Find changes in environment.\nDiff {:?}", &changes);
                         subs_guard.iter_mut().for_each(|s| {
                             let sub = s.0;
                             let senders = s.1;
@@ -269,6 +284,7 @@ impl EnvironmentWatcher {
                                         });
                                     });
                                 }
+
                                 Subscribe::Envs(envs) => {
                                     changes.iter().for_each(|change| {
                                         if envs.contains(&change.0) {
@@ -278,11 +294,13 @@ impl EnvironmentWatcher {
                                         }
                                     });
                                 }
+
                                 Subscribe::PatternEnvs(envs) => {
                                     let envs = envs
                                         .iter()
                                         .map(|pattern| Regex::new(pattern).unwrap())
                                         .collect::<Vec<Regex>>();
+
                                     changes.iter().for_each(|change| {
                                         envs.iter().for_each(|reg| {
                                             let mat = reg.find(&*change.0);

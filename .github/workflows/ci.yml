@@ -34,6 +34,10 @@ jobs:
       - name: run test's
         run: cargo test --package env-watcher --lib test
       - name: exmaple snapshot
-        run: cargo run --package env-watcher --example change_hanlder
+        run: cargo run --package env-watcher --example change_handler
       - name: exmaple change handler
         run: cargo run --package env-watcher --example snapshot
+      - name: exmaple derive base
+        run: cargo run --package env-watcher --example derive_base
+      - name: exmaple derive snapshot
+        run: cargo run --package env-watcher --example derive_snapshot
